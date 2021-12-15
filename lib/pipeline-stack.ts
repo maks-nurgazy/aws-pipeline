@@ -2,6 +2,7 @@ import { SecretValue, Stack, StackProps } from '@aws-cdk/core';
 import { Construct } from 'constructs';
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
 import {
+  CloudFormationCreateUpdateStackAction,
   CodeBuildAction,
   GitHubSourceAction,
 } from '@aws-cdk/aws-codepipeline-actions';
@@ -53,6 +54,19 @@ export class PipelineStack extends Stack {
               'build-specs/cdk-build-spec.yml'
             ),
           }),
+        }),
+      ],
+    });
+
+    pipeline.addStage({
+      stageName: 'Pipeline_Update',
+      actions: [
+        new CloudFormationCreateUpdateStackAction({
+          actionName: 'Pipeline_Update',
+          stackName: 'PipelineStack',
+          templatePath: cdkBuildOutput.atPath('PipelineStack.template.json'),
+          adminPermissions: true,
+          // role -> you can do this to narrow down permissions
         }),
       ],
     });
