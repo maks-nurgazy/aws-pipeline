@@ -9,6 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "test:update": "jest --updateSnapshot",
+    "clear_jest": "jest --clearCache",
     "cdk": "cdk",
     "clean": "rm -rf node_modules package-lock.json"
   },
