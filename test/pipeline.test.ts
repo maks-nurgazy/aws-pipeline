@@ -19,7 +19,9 @@ test('Pipeline Stack', () => {
 
 test('Adding service stage', () => {
   const app = new App();
-  const serviceStack = new ServiceStack(app, 'ServiceStack');
+  const serviceStack = new ServiceStack(app, 'ServiceStack', {
+    stageName: 'Test',
+  });
   const pipelineStack = new PipelineStack(app, 'PipelineStack');
 
   pipelineStack.addServiceStage(serviceStack, 'Test');
@@ -37,7 +39,9 @@ test('Adding service stage', () => {
 
 test('Adding billing stack to a stage', () => {
   const app = new App();
-  const serviceStack = new ServiceStack(app, 'ServiceStack');
+  const serviceStack = new ServiceStack(app, 'ServiceStack', {
+    stageName: 'Test',
+  });
   const pipelineStack = new PipelineStack(app, 'PipelineStack');
   const billingStack = new BillingStack(app, 'BillingStack', {
     budgetAmount: 5,
@@ -52,9 +56,11 @@ test('Adding billing stack to a stage', () => {
     haveResourceLike('AWS::CodePipeline::Pipeline', {
       Stages: arrayWith(
         objectLike({
-          Actions: arrayWith(objectLike({
-            Name: 'Billing_Update'
-          }))
+          Actions: arrayWith(
+            objectLike({
+              Name: 'Billing_Update',
+            })
+          ),
         })
       ),
     })
